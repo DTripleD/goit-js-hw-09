@@ -26,8 +26,6 @@ const options = {
         const currentDate = new Date();
         const timeRemain = selectedDate - currentDate;
 
-        console.log(timeRemain);
-
         if (timeRemain !== '') {
           startBtn.setAttribute('disabled', '');
         }
