@@ -1,35 +1,46 @@
-const firstDelayInput = document.querySelector('[name=delay]');
-const delayStepInput = document.querySelector('[name=step]');
-const amountInput = document.querySelector('[name=amount]');
-const createBtn = document.querySelector('button[type=submit]');
+import Notiflix from 'notiflix';
+
 const formElement = document.querySelector('.form');
 
-console.log(createBtn);
+formElement.addEventListener('submit', onFormSubmit);
 
-formElement.addEventListener('submit', createPromise);
-
-function createPromise(event, position, delay) {
+function onFormSubmit(event) {
   event.preventDefault();
 
-  let timeoutId = 0;
+  const { delay, step, amount } = event.currentTarget.elements;
 
-  for (let i = 0; i < amountInput.value; i++) {
-    const delay = Number(firstDelayInput.value) + Number(delayStepInput.value) * timeoutId;
-    timeoutId = setTimeout(() => {
-      const shouldResolve = Math.random() > 0.3;
-      if (shouldResolve) {
-        // Fulfill
-        console.log('Fulfill');
-        console.log(delay);
-      } else {
-        // Reject
-        console.log('Reject');
-        console.log(delay);
-      }
-    }, delay);
+  if (delay.value <= 0 || step.value <= 0 || amount.value <= 0) {
+    return Notiflix.Notify.warning('Enter a number greater than 0');
   }
 
+  for (let i = 0; i < amount.value; i += 1) {
+    const positionCounter = i + 1;
+
+    const delays = Number(delay.value) + step.value * i;
+
+    createPromise(positionCounter, delays)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(
+          `✅ Fulfilled promise ${position} in ${delay}ms`
+        );
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(
+          `❌ Rejected promise ${position} in ${delay}ms`
+        );
+      });
+  }
 }
 
-// Під час кожного виклику передай їй номер промісу (position), що створюється, і затримку, враховуючи першу затримку (delay), введену користувачем, і крок (step).
-// Доповни код функції createPromise таким чином, щоб вона повертала один проміс, який виконується або відхиляється через delay часу. Значенням промісу повинен бути об'єкт, в якому будуть властивості position і delay зі значеннями однойменних параметрів. Використовуй початковий код функції для вибору того, що потрібно зробити з промісом - виконати або відхилити.
+function createPromise(position, delay) {
+  return new Promise((resolve, reject) => {
+    const shouldResolve = Math.random() > 0.3;
+    setTimeout(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
+}
