@@ -1,0 +1,2 @@
+const e=document.querySelector("[name=delay]"),o=document.querySelector("[name=step]"),t=document.querySelector("[name=amount]"),l=document.querySelector("button[type=submit]"),n=document.querySelector(".form");console.log(l),n.addEventListener("submit",(function(l,n,u){l.preventDefault();let c=0;for(let l=0;l<t.value;l++){const t=Number(e.value)+Number(o.value)*c;c=setTimeout((()=>{Math.random()>.3?(console.log("Fulfill"),console.log(t)):(console.log("Reject"),console.log(t))}),t)}}));
+//# sourceMappingURL=03-promises.b0b73c4d.js.map
