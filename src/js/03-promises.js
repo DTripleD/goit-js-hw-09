@@ -11,7 +11,7 @@ function onFormSubmit(event) {
 
   // const { delay, step, amount } = event.currentTarget.elements;
 
-  if (delay.value <= 0 || step.value <= 0 || amount.value <= 0) {
+  if (delay.value < 0 || step.value < 0 || amount.value <= 0) {
     return Notiflix.Report.info('Enter a number greater than 0', '', 'Okay');
     // return Notiflix.Notify.warning('Enter a number greater than 0');
   }
