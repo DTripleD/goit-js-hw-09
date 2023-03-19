@@ -1,24 +1,26 @@
 import Notiflix from 'notiflix';
 
-const formElement = document.querySelector('.form');
+const form = document.querySelector('.form');
 
-formElement.addEventListener('submit', onFormSubmit);
+form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(event) {
   event.preventDefault();
 
-  const { delay, step, amount } = event.currentTarget.elements;
+  const { delay, step, amount } = event.currentTarget;
+
+  // const { delay, step, amount } = event.currentTarget.elements;
 
   if (delay.value <= 0 || step.value <= 0 || amount.value <= 0) {
-    return Notiflix.Notify.warning('Enter a number greater than 0');
+    return Notiflix.Report.info('Enter a number greater than 0', '', 'Okay');
+    // return Notiflix.Notify.warning('Enter a number greater than 0');
   }
 
   for (let i = 0; i < amount.value; i += 1) {
-    const positionCounter = i + 1;
+    const delayCounter = Number(delay.value) + Number(step.value) * i;
+    const iterationCounter = i + 1;
 
-    const delays = Number(delay.value) + step.value * i;
-
-    createPromise(positionCounter, delays)
+    createPromise(iterationCounter, delayCounter)
       .then(({ position, delay }) => {
         Notiflix.Notify.success(
           `✅ Fulfilled promise ${position} in ${delay}ms`
@@ -33,12 +35,14 @@ function onFormSubmit(event) {
 }
 
 function createPromise(position, delay) {
+  const shouldResolve = Math.random() > 0.3;
   return new Promise((resolve, reject) => {
-    const shouldResolve = Math.random() > 0.3;
     setTimeout(() => {
       if (shouldResolve) {
+        // Fulfill
         resolve({ position, delay });
       } else {
+        // Reject
         reject({ position, delay });
       }
     }, delay);
